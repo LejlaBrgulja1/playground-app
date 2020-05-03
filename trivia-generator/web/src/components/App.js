@@ -2,10 +2,10 @@ import React, { Fragment } from 'react';
 import Home from './Home';
 import Header from './Header';
 import Footer from './Footer';
-import { Route, Switch } from "react-router-dom";
+import { Route, Switch, Redirect } from "react-router-dom";
 
 import Generator from './Generator';
-import Quiz from './Quiz';
+import GeneratedQuiz from './GeneratedQuiz';
 
 class App extends React.Component {
 
@@ -18,8 +18,9 @@ class App extends React.Component {
   setQuiz = (questiions) => {
     this.setState({ quiz: questiions });
   }
+  
 
-  render(){
+  render() {
     return (
     <Fragment>
       <Header/>
@@ -30,9 +31,8 @@ class App extends React.Component {
           <Route exact path="/generator">
             <Generator setQuiz={this.setQuiz} />
           </Route>
-          <Route exact path="/quiz">
-            <Quiz quiz={this.state.quiz} />
-          </Route>
+          <Route exact path="/quiz/:id" render={(props) => <GeneratedQuiz {...props}/>}  />
+          <Redirect from="/*" to="/" />
         </Switch>
       <Footer/>
     </Fragment>

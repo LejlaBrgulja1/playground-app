@@ -1,19 +1,30 @@
 import React, { Fragment } from 'react';
 import BooleanQuestion from './Question';
 import { add } from '../api/CollectionUtils';
+import { getQuiz } from '../api/QuizApi';
 
-class Quiz extends React.Component {
+class GeneratedQuiz extends React.Component {
     results = new Map();
     state = {
         isCompletedQuiz: false,
         correctAnswers: 0,
         incorrectAnswers: 0,
         unansweredAnswers: 0,
-        totalQuestions: this.props.quiz.map(x => x.numberOfQuestions).reduce(add, 0)
+        quiz: {}
     }
 
-    constructor(props) {
-        super(props);
+    componentDidMount() {
+        console.log(this.props)
+        getQuiz(this.props.match.params.id)
+        .then((responseData) => {
+            console.log(responseData)
+            this.setState({
+                quiz: responseData,
+                totalQuestions: responseData.map(x => x.numberOfQuestions).reduce(add, 0)
+            })
+        })
+        .catch(err => console.log(err))
+    
     }
 
     handleChange = (question, isCorrect) => {
@@ -39,7 +50,7 @@ class Quiz extends React.Component {
             <div className="container mtb">
                 <div className="row">
                     <div className="col-lg-10">
-                    { this.props.quiz.length >= 1 && this.props.quiz.map(questionBatch => 
+                    { this.state.quiz.length >= 1 && this.state.quiz.map(questionBatch => 
                         <div className="card bg-light mb-3" >
                             <div className="card-header">{questionBatch.batchCategory}</div>
                             <div className="card-body">
@@ -73,4 +84,4 @@ class Quiz extends React.Component {
     }
 }
 
-export default Quiz;
+export default GeneratedQuiz;

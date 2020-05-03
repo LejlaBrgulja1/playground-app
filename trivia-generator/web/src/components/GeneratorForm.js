@@ -1,20 +1,32 @@
 import React from 'react';
 import DropdownInput from './DropdownInput';
-import { categories, difficulties, types, encodings } from '../stores/questions';
 import getGeneratedQuestions from '../api/QuestionGeneratorApi';
 import loader from '../assets/css/images/prettyPhoto/light_rounded/loader.gif';
 import NumericInput from './NumericInput';
+import getTriviaParameters from '../api/TriviaApi';
 
 class GeneratorForm extends React.Component {
+
+  componentWillMount() {
+    getTriviaParameters()
+    .then((responseData) => {
+      this.setState({
+        triviaParameters: responseData
+      });
+    })
+    .catch(err => console.log(err))
+  }
+
   defaultQuestionQuery = {
     numberOfQuestions: 1,
     category: null,
     difficulty: null,
     type: null,
-    encoding: encodings[0].value
+    encoding: null
   };
 
   state = {
+    triviaParameters: {},
     errors: {},
     loading: false,
     questionQuery: this.defaultQuestionQuery
@@ -72,7 +84,7 @@ class GeneratorForm extends React.Component {
             labelName="Select Category" 
             name="category"
             value={this.state.questionQuery.category}
-            values={categories}
+            values={this.state.triviaParameters.categories}
             shouldDisable={this.shouldDisable}
             onChange={this.handleChange}
           />
@@ -81,7 +93,7 @@ class GeneratorForm extends React.Component {
             labelName="Select Difficulty" 
             name="difficulty" 
             value={this.state.questionQuery.difficulty}
-            values={difficulties}
+            values={this.state.triviaParameters.difficulties}
             shouldDisable={this.shouldDisable}
             onChange={this.handleChange}
           />
@@ -90,7 +102,7 @@ class GeneratorForm extends React.Component {
             labelName="Select Type" 
             name="type" 
             value={this.state.questionQuery.type}
-            values={types}
+            values={this.state.triviaParameters.types}
             shouldDisable={this.shouldDisable}
             onChange={this.handleChange}
           />
@@ -99,7 +111,7 @@ class GeneratorForm extends React.Component {
             labelName="Select Encoding" 
             name="encoding" 
             value={this.state.questionQuery.encoding}
-            values={encodings}
+            values={this.state.triviaParameters.encodings}
             shouldDisable={this.shouldDisable}
             onChange={this.handleChange}
           />

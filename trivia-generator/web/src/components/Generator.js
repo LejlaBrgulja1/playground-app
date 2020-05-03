@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import GeneratorForm from './GeneratorForm';
 import GeneratorResults from './GeneratorResults';
 import { useHistory } from 'react-router-dom';
+import { postQuiz } from '../api/QuizApi';
 
 const Generator = (props) => {
   const history = useHistory();
@@ -24,8 +25,14 @@ const Generator = (props) => {
   }
 
   function generateQuiz() {
-    props.setQuiz(questions);
-    history.push('/quiz')
+    postQuiz(questions)
+    .then((responseData) => {
+      props.setQuiz(questions);
+      history.push('/quiz/' + responseData.quizId)
+    })
+    .catch(err => console.log(err))
+
+    
   }
 
   return (

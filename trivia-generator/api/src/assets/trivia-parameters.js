@@ -1,4 +1,4 @@
-export const categories = [
+const categories = [
     { value: 'any', description: 'Any Lookup' },
     { value: '9', description: 'General Knowledge' },
     { value: '10', description: 'Entertainment: Books' },
@@ -26,22 +26,29 @@ export const categories = [
     { value: '32', description: 'Entertainment: Cartoon & Animations' },
   ];
 
-  export const difficulties= [
+  const difficulties= [
     { value: 'any', description: 'Any Difficulty' },
     { value: 'easy', description: 'Easy' },
     { value: 'medium', description: 'Medium' },
     { value: 'hard', description: 'Hard' },
   ];
 
-  export const types = [
+  const types = [
     { value: 'any', description: 'Any Type' },
     { value: 'multiple', description: 'Multiple Choice' },
     { value: 'boolean', description: 'True / False' },
   ];
 
-  export const encodings = [
+  const encodings = [
     { value: 'default', description: 'Default Encoding' },
     { value: 'urlLegacy', description: 'Legacy URL Encoding' },
     { value: 'url3986', description: 'URL Encoding (RFC 3986)' },
     { value: 'base64', description: 'Base64 Encoding' },
   ];
+
+module.exports = {
+    encodings: encodings,
+    categories: categories,
+    types: types,
+    difficulties: difficulties
+}
