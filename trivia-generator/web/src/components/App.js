@@ -1,32 +1,42 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import Home from './Home';
 import Header from './Header';
 import Footer from './Footer';
 import { Route, Switch } from "react-router-dom";
 
 import Generator from './Generator';
+import Quiz from './Quiz';
 
-function App() {
-  return (
-    <div>
+class App extends React.Component {
+
+  state = { quiz: {} }
+
+  constructor(props) {
+    super(props);
+  }
+
+  setQuiz = (questiions) => {
+    this.setState({ quiz: questiions });
+  }
+
+  render(){
+    return (
+    <Fragment>
       <Header/>
-      {/* <Router>
-        <div>
-          <Route path="/" render={Home} />
-          <Route path="/generator" render={Generator} />
-        </div>
-      </Router> */}
         <Switch>
           <Route exact path="/">
-            <Home/>
+            <Home />
           </Route>
           <Route exact path="/generator">
-            <Generator/>
+            <Generator setQuiz={this.setQuiz} />
+          </Route>
+          <Route exact path="/quiz">
+            <Quiz quiz={this.state.quiz} />
           </Route>
         </Switch>
       <Footer/>
-    </div>
-  );
+    </Fragment>
+  );}
 }
 
 export default App;

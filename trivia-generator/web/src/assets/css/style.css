@@ -375,6 +375,11 @@ a:focus {
 	margin-left: 15px;
 }
 
+.invalid-label{
+	color: red;
+	font-size: 12px;
+}
+
 .ctitle {
 	color: #00b3fe;
 	font-weight: 700;
