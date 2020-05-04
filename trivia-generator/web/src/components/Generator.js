@@ -1,11 +1,9 @@
 import React, { useState } from 'react';
 import GeneratorForm from './GeneratorForm';
 import GeneratorResults from './GeneratorResults';
-import { useHistory } from 'react-router-dom';
 import { postQuiz } from '../api/QuizApi';
 
 const Generator = (props) => {
-  const history = useHistory();
   const [questions, setQuestions] = useState([]);
 
   function handleSetQuestions(generatedQuestionsBatch) {
@@ -26,13 +24,8 @@ const Generator = (props) => {
 
   function generateQuiz() {
     postQuiz(questions)
-    .then((responseData) => {
-      props.setQuiz(questions);
-      history.push('/quiz/' + responseData.quizId)
-    })
+    .then((responseData) => props.history.push('/quiz/' + responseData.quizId))
     .catch(err => console.log(err))
-
-    
   }
 
   return (
@@ -42,19 +35,18 @@ const Generator = (props) => {
           <div >
             <h6>Please fill the required fields and click Submit to generate questions. Summary of generated questions will be presented in the Summary section.</h6>
           </div>
-          <GeneratorForm setQuestions={handleSetQuestions} shouldAllowSubmit={questions.length < 2} />
+          <GeneratorForm setQuestions={handleSetQuestions} shouldAllowSubmit={questions.length < 10} />
         </div>
         <div className="col-lg-4">
           <h4>Summary</h4>
           <div className="hline"></div>
           <GeneratorResults values={questions} removeQuestionBatch={handleRemoveQuestionBatch}/>
           { questions.length >= 1 &&
-              <div>
-                <div className="btn btn-sm btn-danger" onClick={clearAll}>Clear All</div>
-                <div className="btn btn-sm btn-info" onClick={generateQuiz}>Generate Quiz</div>
+              <div style={{marginTop: "10px"}}>
+                <div className="btn btn-md btn-info" onClick={generateQuiz} style={{marginRight: "5px"}}>Generate Quiz</div>
+                <div className="btn btn-md btn-danger" onClick={clearAll} >Clear All</div>
               </div>
           }
-
           <div className="spacing"></div>
         </div>
       </div>

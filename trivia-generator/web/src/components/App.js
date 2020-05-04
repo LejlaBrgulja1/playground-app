@@ -6,35 +6,22 @@ import { Route, Switch, Redirect } from "react-router-dom";
 
 import Generator from './Generator';
 import GeneratedQuiz from './GeneratedQuiz';
+import { BrowserRouter as Router } from "react-router-dom";
 
 class App extends React.Component {
-
-  state = { quiz: {} }
-
-  constructor(props) {
-    super(props);
-  }
-
-  setQuiz = (questiions) => {
-    this.setState({ quiz: questiions });
-  }
-  
-
   render() {
     return (
     <Fragment>
-      <Header/>
-        <Switch>
-          <Route exact path="/">
-            <Home />
-          </Route>
-          <Route exact path="/generator">
-            <Generator setQuiz={this.setQuiz} />
-          </Route>
-          <Route exact path="/quiz/:id" render={(props) => <GeneratedQuiz {...props}/>}  />
-          <Redirect from="/*" to="/" />
-        </Switch>
-      <Footer/>
+      <Router>
+        <Header/>
+          <Switch>
+            <Route exact path="/" component={Home} />
+            <Route exact path="/generator" render={({history}) => <Generator history={history} />} />
+            <Route exact path="/quiz/:id" component={GeneratedQuiz}/>}  />
+            <Redirect from="/*" to="/" />
+          </Switch>
+        <Footer/>
+      </Router>
     </Fragment>
   );}
 }

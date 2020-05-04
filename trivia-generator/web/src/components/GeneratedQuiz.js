@@ -1,6 +1,6 @@
 import React, { Fragment } from 'react';
-import BooleanQuestion from './Question';
-import { add } from '../api/CollectionUtils';
+import Question from './Question';
+import { add } from '../utils/CollectionUtils';
 import { getQuiz } from '../api/QuizApi';
 
 class GeneratedQuiz extends React.Component {
@@ -10,42 +10,50 @@ class GeneratedQuiz extends React.Component {
         correctAnswers: 0,
         incorrectAnswers: 0,
         unansweredAnswers: 0,
-        quiz: {}
+        quiz: null
     }
 
     componentDidMount() {
-        console.log(this.props)
-        getQuiz(this.props.match.params.id)
-        .then((responseData) => {
-            console.log(responseData)
-            this.setState({
-                quiz: responseData,
-                totalQuestions: responseData.map(x => x.numberOfQuestions).reduce(add, 0)
+        if (this.props.match?.params?.id) {
+            getQuiz(this.props.match.params.id)
+            .then((responseData) => {
+                this.setState({
+                    quiz: responseData,
+                    totalQuestions: responseData.map(x => x.numberOfQuestions).reduce(add, 0)
+                })
             })
-        })
-        .catch(err => console.log(err))
-    
+            .catch(err => console.log(err))
+        }
     }
 
-    handleChange = (question, isCorrect) => {
-        this.results.set(question, isCorrect);
-    }
+    handleChange = (question, isCorrect) => this.results.set(question, isCorrect);
 
     submitAnswers = () => {
-        for (let [key, value] of this.results) {
-            if (value) this.state.correctAnswers++;
-            else this.state.incorrectAnswers++;
+        let correctAnswers = 0;
+        let incorrectAnswers = 0;
+        for (let [value] of this.results) {
+            if (value) correctAnswers++;
+            else incorrectAnswers++;
         }
 
         this.setState({ 
             isCompletedQuiz: true,
-            correctAnswers: this.state.correctAnswers,
-            incorrectAnswers: this.state.incorrectAnswers,
-            unansweredAnswers: this.state.totalQuestions - this.state.correctAnswers - this.state.incorrectAnswers 
+            correctAnswers: correctAnswers,
+            incorrectAnswers: incorrectAnswers,
+            unansweredAnswers: this.state.totalQuestions - correctAnswers - incorrectAnswers 
         })
     }
 
     render() {
+        if (!this.state.quiz) {
+            return (
+                <div className="row justify-content-center">
+                    <div className="col-lg-4">
+                        <h6>The quiz with provided id does not exist.</h6>
+                    </div>
+                </div>
+            );
+        }
         return (
             <div className="container mtb">
                 <div className="row">
@@ -55,7 +63,7 @@ class GeneratedQuiz extends React.Component {
                             <div className="card-header">{questionBatch.batchCategory}</div>
                             <div className="card-body">
                                 { questionBatch.questions.map(question => 
-                                <BooleanQuestion disabled={this.state.isCompletedQuiz} question={question} onChange={this.handleChange} />
+                                    <Question disabled={this.state.isCompletedQuiz} questionDetails={question} onChange={this.handleChange} />
                                 )}
                             </div>
                         </div>
@@ -80,8 +88,7 @@ class GeneratedQuiz extends React.Component {
                     </div>
                 </div>
             </div>
-    );
-    }
+    )}
 }
 
 export default GeneratedQuiz;

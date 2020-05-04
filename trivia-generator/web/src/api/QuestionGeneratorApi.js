@@ -1,4 +1,4 @@
-import { handleResponse, handleError } from "./ApiUtils";
+import { handleResponse, handleError } from "../utils/ApiUtils";
 
 function getGeneratedQuestions (question) {
   let url = `https://opentdb.com/api.php?${question.numberOfQuestions ? "amount=" + question.numberOfQuestions + "&" : ""}${question.category ? "category=" + question.category + "&" : ""}

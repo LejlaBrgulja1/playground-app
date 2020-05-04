@@ -3,11 +3,11 @@ import DropdownInput from './DropdownInput';
 import getGeneratedQuestions from '../api/QuestionGeneratorApi';
 import loader from '../assets/css/images/prettyPhoto/light_rounded/loader.gif';
 import NumericInput from './NumericInput';
-import getTriviaParameters from '../api/TriviaApi';
+import { getTriviaParameters } from '../api/QuizApi';
 
 class GeneratorForm extends React.Component {
 
-  componentWillMount() {
+  componentDidMount() {
     getTriviaParameters()
     .then((responseData) => {
       this.setState({

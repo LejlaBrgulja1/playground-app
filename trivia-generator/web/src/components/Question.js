@@ -1,34 +1,42 @@
 import React, { Fragment } from 'react';
-import { shuffle } from '../api/CollectionUtils';
+import { shuffle } from '../utils/CollectionUtils';
 
-class BooleanQuestion extends React.Component {
-    handleChange = (answer) => this.props.onChange(this.props.question.question, this.props.question.correct_answer === answer);
+class Question extends React.Component {
     state = {
-     answers: shuffle([...this.props.question.incorrect_answers, this.props.question.correct_answer])   
+     answers: this.props.questionDetails ? shuffle([...this.props.questionDetails.incorrect_answers, this.props.questionDetails.correct_answer]) : []
     }
 
     render() {
-        return (
-        <Fragment>
-            <h6>{this.props.question.question}</h6>
-            <form>
-                { this.state.answers.map(answer => 
-                    <div>
-                        <label>
-                            <input 
-                            disabled={this.props.disabled}
-                            onChange={() => this.handleChange(answer)} 
-                            type="radio" 
-                            id={answer} 
-                            name="answer" 
-                            value={answer} /> 
-                            {answer}
-                        </label>
-                    </div>
-                ) }
-            </form>
-        </Fragment>
-    );}
+        const { questionDetails, disabled, onChange } = this.props;
+        
+        if (!questionDetails) {
+            return <></>
+        }
+
+        const handleChange = (answer) => onChange(questionDetails.question, questionDetails.correct_answer === answer);
+
+        return ( 
+            <Fragment>
+                <h6 data-testid="questionDetails">{ questionDetails.question }</h6>
+                <form data-testid="questionsForm">
+                    { this.state.answers.map(answer => 
+                        <div key={answer}>
+                            <label>
+                                <input 
+                                disabled={disabled}
+                                onChange={() => handleChange(answer)} 
+                                type="radio" 
+                                id={answer} 
+                                name="answer" 
+                                value={answer} /> 
+                                {answer}
+                            </label>
+                        </div>
+                    )}
+                </form>
+            </Fragment>
+        );
+    }
 }
 
-export default BooleanQuestion;
+export default Question;

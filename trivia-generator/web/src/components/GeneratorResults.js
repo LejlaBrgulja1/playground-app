@@ -3,12 +3,12 @@ import React from 'react';
 class GeneratorResults extends React.Component {
 
   render () {
-    if (this.props.values.length) {
+    if (this.props.values && this.props.values.length) {
       return (
         <div>
           <span>Category</span><span className="pull-right"># of questions</span>
-          { this.props.values.map(questionBatch =>
-            <div>
+          { this.props.values.map((questionBatch, i) =>
+            <div key={i}>
               <div className="btn btn-sm btn-theme">{questionBatch.batchCategory}</div>
               <span className="badge badge-theme pull-right text-light" style={{marginTop: "10px"}}>{questionBatch.numberOfQuestions}</span>
               <div className="btn btn-sm btn-danger" onClick={() => this.props.removeQuestionBatch(questionBatch)}>Delete</div>
